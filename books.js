@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/book", async (req, res) => {
+app.get("/books", async (req, res) => {
   const response = await documentClient.send(
     new ScanCommand({
       TableName: "books",
@@ -24,7 +24,7 @@ app.get("/book", async (req, res) => {
 });
 
 //(ทดลอง) get book แบบกำหนด id
-app.get("/book/:id", async (req, res) => {
+app.get("/books/:id", async (req, res) => {
   const getBookById = await documentClient.send(
     new QueryCommand({
       TableName : 'books',
@@ -39,7 +39,7 @@ app.get("/book/:id", async (req, res) => {
 })
 
 //Add ได้แล้ว
-app.post("/book", async (req, res) => {
+app.post("/books", async (req, res) => {
   let body = req.body
   let data = {
     id : body.id,
@@ -61,7 +61,7 @@ app.post("/book", async (req, res) => {
 })
 
 //Delete ได้แล้ว
-app.delete("/book/:id", async (req, res) => {
+app.delete("/books/:id", async (req, res) => {
   const deleteBook = await documentClient.send(
     new DeleteCommand({
       TableName : "books",
@@ -73,7 +73,7 @@ app.delete("/book/:id", async (req, res) => {
   res.send(deleteBook)
 })
 
-app.put("/book/:id", async (req, res) => {
+app.put("/books/:id", async (req, res) => {
   const updateBook = await documentClient.send(
     new UpdateCommand({
       TableName : "books",
