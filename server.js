@@ -98,7 +98,7 @@ app.put("/books/:id", (req, res) => {
     },
     ExpressionAttributeNames: {
       "#dsc": "desc",
-      "#lan": "language"
+      "#lan": "language",
     },
     ReturnValues: "ALL_NEW",
   };
