@@ -1,4 +1,5 @@
 const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const AWS = require("aws-sdk");
@@ -51,26 +52,24 @@ app.get("/books/:id", (req, res) => {
 });
 
 app.post("/books", (req, res) => {
-  const { id, authors, desc, genres, image, language, quantity, title } =
-    req.body;
-
+  const body = req.body
   const params = {
     TableName: tableName,
     Item: {
-      id,
-      authors,
-      desc,
-      genres,
-      image,
-      language,
-      quantity,
-      title,
+      id : uuidv4(),
+      authors : body.authors,
+      desc : body.desc,
+      genres : body.genres,
+      image : body.image,
+      language : body.language,
+      quantity : body.quantity,
+      title : body.title,
     },
   };
 
   dynamoDb.put(params, (error) => {
     if (error) {
-      res.status(500).json({ error: "Error adding book" + error });
+      res.status(500).json({ error: "Error adding book " + error });
     } else {
       res.json(params.Item);
     }
@@ -78,7 +77,7 @@ app.post("/books", (req, res) => {
 });
 
 app.put("/books/:id", (req, res) => {
-  const { authors, desc, genres, image, language, quantity, title } = req.body;
+  const body = req.body;
 
   const params = {
     TableName: tableName,
@@ -87,25 +86,25 @@ app.put("/books/:id", (req, res) => {
     },
     UpdateExpression:
       "SET authors = :authors, #dsc = :desc, genres = :genres, image = :image, #lan = :language, quantity = :quantity, title = :title",
-    ExpressionAttributeValues: {
-      ":authors": authors,
-      ":desc": desc,
-      ":genres": genres,
-      ":image": image,
-      ":language": language,
-      ":quantity": quantity,
-      ":title": title,
-    },
     ExpressionAttributeNames: {
       "#dsc": "desc",
       "#lan": "language",
+    },
+    ExpressionAttributeValues: {
+      ":authors": body.authors,
+      ":desc": body.desc,
+      ":genres": body.genres,
+      ":image": body.image,
+      ":language": body.language,
+      ":quantity": body.quantity,
+      ":title": body.title
     },
     ReturnValues: "ALL_NEW",
   };
 
   dynamoDb.update(params, (error, data) => {
     if (error) {
-      res.status(500).json({ error: "Error updating book" + error });
+      res.status(500).json({ error: "Error updating book " + error });
     } else {
       res.json(data.Attributes);
     }
@@ -122,7 +121,7 @@ app.delete("/books/:id", (req, res) => {
 
   dynamoDb.delete(params, (error) => {
     if (error) {
-      res.status(500).json({ error: "Error deleting book" - error });
+      res.status(500).json({ error: "Error deleting book " + error });
     } else {
       res.json({ success: true });
     }
