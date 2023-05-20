@@ -86,7 +86,7 @@ app.put("/books/:id", (req, res) => {
       id: req.params.id,
     },
     UpdateExpression:
-      "SET authors = :authors, desc = :desc, genres = :genres, image = :image, language = :language, quantity = :quantity, title = :title",
+      "SET authors = :authors, #dsc = :desc, genres = :genres, image = :image, #lan = :language, quantity = :quantity, title = :title",
     ExpressionAttributeValues: {
       ":authors": authors,
       ":desc": desc,
@@ -95,6 +95,10 @@ app.put("/books/:id", (req, res) => {
       ":language": language,
       ":quantity": quantity,
       ":title": title,
+    },
+    ExpressionAttributeNames: {
+      "#dsc": "desc",
+      "#lan": "language",
     },
     ReturnValues: "ALL_NEW",
   };
